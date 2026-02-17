@@ -31,7 +31,7 @@ ANSWER_EVENT = {
             "questionid" : "q-1234",
             "answer" : "Answer"
             })
-    }
+}
 
 QUESTION_EVENT = {
         "gameid" : "01234567012301230123012345678901",
@@ -42,7 +42,7 @@ QUESTION_EVENT = {
 SCORES_EVENT = {
         "gameid" : "01234567012301230123012345678901",
         "questions" : [
-            { "id" : "q-1111", "question" : "Good question?", "answer" : "Yes"},
+            { "id" : "q-1111", "question" : "Good question?", "answer" : "Yes", "bonus" : 20},
         ],
         "iterator" : { "questionpos" : 0 }
 }
@@ -55,7 +55,6 @@ SCORES_EVENT_TWO = {
         ],
         "iterator" : { "questionpos" : 0 }
 }
-
 
 def test_trivia_newgame(mocker):
     # create mocks
@@ -181,11 +180,11 @@ def test_trivia_calculate_scores_correct(mocker):
     # assert we updated the game item, score is incremented
     app.TABLE.update_item.assert_called_with(
         Key={'gameId': '01234567012301230123012345678901', 'connectionId': 'connection-1'},
-        AttributeUpdates={'score': {'Value': 20, 'Action': 'PUT'}}
+        AttributeUpdates={'score': {'Value': 40, 'Action': 'PUT'}}
     )
 
     app.MANAGEMENT.post_to_connection.assert_has_calls([
-        mock.call(Data='{"action": "playerlist", "players": [{"connectionId": "connection-1", "playerName": "AliceBlue", "score": 20, "currentPlayer": true}]}', ConnectionId='connection-1'),
+        mock.call(Data='{"action": "playerlist", "players": [{"connectionId": "connection-1", "playerName": "AliceBlue", "score": 40, "currentPlayer": true}]}', ConnectionId='connection-1'),
         mock.call(Data='{"action": "gameover"}', ConnectionId='connection-1')
         ])
 
